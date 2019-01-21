@@ -12,5 +12,4 @@
 	if (!$conn) {
 		die('<p>Fallou a conexion coa base de datos: </p>' . mysqli_connect_error());
 	}
-	echo '<p>Conexión OK!</p>';
 ?>
