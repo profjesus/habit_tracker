@@ -8,6 +8,12 @@
 	<?php
 		include './database.php';
 
+		// Crear novo rexistro (resposta a GET)
+		if ( isset($_REQUEST['crear']) ) {
+			$insertar = "INSERT INTO Rexistro (id_habito, dia, valor) VALUES (" . $_REQUEST['crear'] . ",'" . $_REQUEST['data'] . "',1);";
+			$result = mysqli_query($conn, $insertar);
+		}
+
 		$lectura = "SELECT * FROM Habitos ORDER BY Nome;";
 		$habitos = mysqli_query($conn, $lectura);
 		$lerexistro = "SELECT * FROM Rexistro INNER JOIN Habitos ON Rexistro.id_habito = Habitos.ID WHERE Rexistro.dia >= CURDATE() - INTERVAL 4 DAY ORDER BY Habitos.Nome, Rexistro.dia;";
@@ -62,7 +68,7 @@
 							}
 							$valor = mysqli_fetch_array($valores);
 						} else {
-							echo "<td><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></td>";
+							echo "<td><a href=\"rexistro.php?crear=" . $hab['ID'] . "&data=" . $data . "\"><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></a></td>";
 						}
 					}
 				}
