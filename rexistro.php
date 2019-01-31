@@ -8,8 +8,10 @@
 	<?php
 		include './database.php';
 
-		$lectura = "SELECT * FROM Habitos;";
+		$lectura = "SELECT * FROM Habitos ORDER BY Nome;";
 		$habitos = mysqli_query($conn, $lectura);
+		$lerexistro = "SELECT * FROM Rexistro INNER JOIN Habitos ON Rexistro.id_habito = Habitos.ID WHERE Rexistro.dia >= CURDATE() - INTERVAL 4 DAY ORDER BY Habitos.Nome, Rexistro.dia;";
+		$valores = mysqli_query($conn, $lerexistro);
 	?>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 	  <a class="navbar-brand" href="#">Habit Tracker</a>
@@ -35,16 +37,34 @@
 			<td></td>
 			<?php
 				$hoxe = mktime(0,0,0);
+				$datas = [];
 				for ($dias=4;$dias>=0;$dias--) {
 					echo "<td>" . date('j/n/Y', $hoxe-$dias*24*60*60) . "</td>";
+					$datas[] = date('Y-m-d', $hoxe-$dias*24*60*60);
 				}
 			?>
 		</tr>
 		<?php
+			$valor = mysqli_fetch_array($valores);
 			while ($hab = mysqli_fetch_array($habitos)) {
 				echo "<tr><td>" . $hab['Nome'] . "</td>";
-				for ($i=1; $i<=5; $i++) {
-					echo "<td><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-check-circle\"></i></button></td>";
+				if ($valor['ID'] != $hab['ID']) {
+					for ($i=1; $i<=5; $i++) {
+						echo "<td><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></td>";
+					}
+				} else {
+					foreach ($datas as $data) {
+						if ($valor['dia'] == $data) {
+							if ($valor['valor'] == 0) {
+								echo "<td><i class=\"fas fa-times-circle\"></i></td>";
+							} else {
+								echo "<td><i class=\"fas fa-check-circle\"></i></td>";
+							}
+							$valor = mysqli_fetch_array($valores);
+						} else {
+							echo "<td><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></td>";
+						}
+					}
 				}
 				echo "</tr>";
 			}
