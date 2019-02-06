@@ -55,12 +55,12 @@
 			while ($hab = mysqli_fetch_array($habitos)) {
 				echo "<tr><td>" . $hab['Nome'] . "</td>";
 				if ($valor['ID'] != $hab['ID']) {
-					for ($i=1; $i<=5; $i++) {
-						echo "<td><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></td>";
+					foreach ($datas as $data) {
+						echo "<td><a href=\"rexistro.php?crear=" . $hab['ID'] . "&data=" . $data . "\"><button type=\"button\" class=\"btn btn-light\"><i class=\"far fa-circle\"></i></button></a></td>";
 					}
 				} else {
 					foreach ($datas as $data) {
-						if ($valor['dia'] == $data) {
+						if (($valor['dia'] == $data) and ($valor['ID'] == $hab['ID'])) {
 							if ($valor['valor'] == 0) {
 								echo "<td><i class=\"fas fa-times-circle\"></i></td>";
 							} else {
