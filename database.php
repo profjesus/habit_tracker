@@ -1,9 +1,11 @@
 <?php
 	// Credenciais base de datos
-	$servername = "localhost";
-	$username = "alan";
-	$password = "turing";
-	$database = "ENIGMA";
+	$url = getenv('JAWSDB_URL') ?: 'mysql://alan:turing@localhost:3306/ENIGMA';
+	$dbparts = parse_url($url);
+	$servername = $dbparts['host'];
+	$username = $dbparts['user'];
+	$password = $dbparts['pass'];
+	$database = ltrim($dbparts['path'],'/');
 
 	// Crear conexion MySQL
 	$conn = mysqli_connect($servername, $username, $password, $database);
